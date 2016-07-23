@@ -73,7 +73,7 @@ public class LookupService {
             {
                 JsonGenerator jg = objectMapper.getJsonFactory().createJsonGenerator( os, JsonEncoding.UTF8 );
                 jg.writeStartObject();
-                jg.writeFieldName( "colleagues" );
+                jg.writeFieldName( "publications" );
                 jg.writeStartArray();
 
                 try ( Transaction tx = graphDb.beginTx();
