@@ -36,7 +36,7 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Path("/lookup")
 public class LookupService {
-	private static final String PUBLICATIONS = "MATCH (n:publication) WHERE n.doi=~{doi} RETURN n.key AS key, n.title AS title";
+	private static final String PUBLICATIONS = "MATCH (n:publication) WHERE n.doi=~{doi} RETURN n";
 	
 	private final ObjectMapper objectMapper;
 	
@@ -82,10 +82,12 @@ public class LookupService {
                     while ( result.hasNext() )
                     {
                         Map<String,Object> row = result.next();
+                        Node publication = (Node) row.get( "n" );
                         
                         jg.writeStartObject();
-                        jg.writeStringField("key", (String) row.get( "key" ));
-                        jg.writeStringField("title", (String) row.get( "title" ));
+                        jg.writeStringField( "key", publication.getProperty( "key" ).toString() );
+                        jg.writeStringField( "title", publication.getProperty( "title" ).toString() );
+                        jg.writeStringField( "doi", publication.getProperty( "doi" ).toString() );
                         jg.writeEndObject();
                     }
                 }
