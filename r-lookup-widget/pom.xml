@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.rdswitchboard.plugins</groupId>
+  <artifactId>r-lookup-widget</artifactId>
+  <version>0.0.1</version>
+  <name>Researchgraph Lookup Widget Plugin</name>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jdk.version>1.7</jdk.version>
+    <neo4j.version>3.0.2</neo4j.version>
+    <junti.version>4.11</junti.version>
+    <hamcrest.version>1.3</hamcrest.version>
+  </properties>
+  
+  <build>
+    <plugins>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+  
+  
+  <dependencies>
+    <!-- <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>${rs.version}</version>
+      <scope>provided</scope>
+    </dependency> -->
+    <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j</artifactId>
+      <version>${neo4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j.app</groupId>
+      <artifactId>neo4j-server</artifactId>
+      <version>${neo4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j.test</groupId>
+      <artifactId>neo4j-harness</artifactId>
+      <version>${neo4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junti.version}</version>
+      <scope>test</scope>
+    </dependency> 
+    <dependency>
+	  <groupId>org.hamcrest</groupId>
+	  <artifactId>hamcrest-all</artifactId>
+	  <version>${hamcrest.version}</version>
+	  <scope>test</scope>
+    </dependency>    
+  </dependencies>  
+  
+</project>
