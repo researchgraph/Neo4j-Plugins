@@ -1,5 +1,7 @@
 package org.researchgraph.neo4j.plugings.lookup;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -8,11 +10,18 @@ import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
+import org.codehaus.jackson.JsonEncoding;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.neo4j.cypher.CypherException;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.MapUtil;
@@ -27,18 +36,22 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Path("/lookup")
 public class LookupService {
+	private static final String PUBLICATIONS = "MATCH (n:publication) WHERE n.doi=~{doi} RETURN n.key AS key, n.title AS title";
+	
+	private final ObjectMapper objectMapper;
+	
 	private GraphDatabaseService graphDb;
 	private final InputFormat input;
     private final OutputFormat output;
     
-    private static final String PUBLICATIONS = "MATCH (n:publication) WHERE n.doi=~{doi} RETURN n.key AS key, n.title AS title";
-	
 	public LookupService( @Context GraphDatabaseService graphDb,
 			@Context InputFormat input, @Context OutputFormat output )
 	{
 		this.graphDb = graphDb;
 		this.input = input;
 		this.output = output;
+		
+		this.objectMapper = new ObjectMapper();
 	}
 
 	@GET
@@ -51,7 +64,42 @@ public class LookupService {
 					new Neo4jError( Status.Request.InvalidFormat, "DOI contains invalid symbols" ) ) );
 		}
 		
-        final Map<String, Object> params = MapUtil.map( "doi", decodedDoi );
+		final Map<String, Object> params = MapUtil.map( "doi", decodedDoi );
+		
+		StreamingOutput stream = new StreamingOutput()
+        {
+            @Override
+            public void write( OutputStream os ) throws IOException, WebApplicationException
+            {
+                JsonGenerator jg = objectMapper.getJsonFactory().createJsonGenerator( os, JsonEncoding.UTF8 );
+                jg.writeStartObject();
+                jg.writeFieldName( "colleagues" );
+                jg.writeStartArray();
+
+                try ( Transaction tx = graphDb.beginTx();
+                      Result result = graphDb.execute( PUBLICATIONS, params ) )
+                {
+                    while ( result.hasNext() )
+                    {
+                        Map<String,Object> row = result.next();
+                        
+                        jg.writeStartObject();
+                        jg.writeStringField("key", (String) row.get( "key" ));
+                        jg.writeStringField("title", (String) row.get( "title" ));
+                        jg.writeEndObject();
+                    }
+                }
+
+                jg.writeEndArray();
+                jg.writeEndObject();
+                jg.flush();
+                jg.close();
+            }
+        };
+
+        return Response.ok().entity( stream ).type( MediaType.APPLICATION_JSON ).build();
+		
+     /*  final Map<String, Object> params = MapUtil.map( "doi", decodedDoi );
 		try ( Transaction tx = graphDb.beginTx();
 			  Result result =  graphDb.execute(PUBLICATIONS, params ) )
         {
@@ -64,6 +112,6 @@ public class LookupService {
             } else {
                 return output.badRequest( e );
             }
-		}
+		}*/
 	}
 }
