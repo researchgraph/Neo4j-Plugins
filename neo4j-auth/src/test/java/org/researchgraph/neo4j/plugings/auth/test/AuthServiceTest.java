@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.neo4j.extensions.server.unmanaged.test;
+package org.researchgraph.neo4j.plugings.auth.test;
 
 import java.io.File;
 import java.net.URI;
@@ -35,7 +35,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.neo4j.extensions.server.unmanaged.AuthService;
+import org.researchgraph.neo4j.plugings.auth.AuthService;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.harness.junit.Neo4jRule;
 import org.neo4j.server.rest.domain.JsonHelper;

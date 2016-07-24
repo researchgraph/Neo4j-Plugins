@@ -25,7 +25,7 @@
  * This plugin is compatible with Neo4j 2.3.1 and should be compatible with future versions as well.   
  */
 
-package org.neo4j.extensions.server.unmanaged;
+package org.researchgraph.neo4j.plugings.auth;
 
 import java.io.IOException;
 import java.security.Principal;
