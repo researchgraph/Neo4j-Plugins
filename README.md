@@ -1,3 +1,5 @@
+# Auth Plugin
+
 ## Installiation Instructions
 
 * Build the project by executing 
@@ -48,3 +50,10 @@ curl --user neo4j:{neo4j.password} http://localhost:7474/api/auth/delete/{user}
 * To login back with different user, execute:
 
 :server connect
+
+# Lookup Plugin
+Lookup plugin instruction is very similar to the auth plugin.  
+
+## Usage
+Access using HTTP Protocol: http://localhost:7474/api/lookup/publication/doi/10.1021.*
+
