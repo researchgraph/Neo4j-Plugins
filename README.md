@@ -9,7 +9,7 @@ $ mvn package
 * Copy compiled plugin into Neo4j plugis folder
 
 ```
-cp neo4j-auth/target/neo4j-auth-1.1.0.jar /path/to/neo4j/plugins/
+cp neo4j-auth/target/neo4j-auth-1.1.1.jar /path/to/neo4j/plugins/
 ```
 
 * Edit neo4j configuration file. 
@@ -33,11 +33,11 @@ Plese pay attension for `extensions` word in the package name. Neo4j configurati
 
 * Adding a new user:
 
-curl --data "password={password}" --user neo4j:{neo4j.password} http://localhost:7474/unmanaged/auth/add/{user}
+curl --data "password={password}" --user neo4j:{neo4j.password} http://localhost:7474/api/auth/add/{user}
 
 * Deleting a user:
 
-curl --user neo4j:{neo4j.password} http://localhost:7474/unmanaged/auth/delete/{user}
+curl --user neo4j:{neo4j.password} http://localhost:7474/api/auth/delete/{user}
  
 ## Neo4j Commands
 
